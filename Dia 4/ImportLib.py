@@ -18,8 +18,9 @@ colores = ['Blanco','Azul','Rojo','Amarillo','Verder']
 aleatorio = choice(colores)
 print(aleatorio)
 
-#Desordenar una lista X
+#Desordenar una lista XX
 numeros = list(range(5,50,5))
 print(numeros)
 shuffle(numeros)
 print(numeros)
+
