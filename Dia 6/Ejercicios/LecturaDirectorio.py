@@ -12,7 +12,7 @@ print(f'El directorio seleccionado es: /{elementoDirectorio}')
 rutaCompleta = os.path.split(ruta)
 print(f'La ruta completa del directorio es: {rutaCompleta}')
 
-os.rmdir('archivos/remover')
+#os.rmdir('archivos/remover')
 
 
 

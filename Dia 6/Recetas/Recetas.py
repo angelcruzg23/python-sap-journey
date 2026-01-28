@@ -50,19 +50,27 @@ def ElegirReceta(ruta, categoria):
 
     os.system('clear')
 
+    salir = 'f'
     recetas = []
     index = 0
     rutaReceta = Path(ruta,categoria)
 
-    #Listar las recetas que tiene la categoria seleccionada
-    for receta in rutaReceta.rglob('*.txt'):
-        recetas.append(receta.name)
-        index += 1
-        print(f'Opción {index} --> Receta: {receta.name}')
+    while salir != 't':
+        #Listar las recetas que tiene la categoria seleccionada
+        for receta in rutaReceta.rglob('*.txt'):
+            recetas.append(receta.name)
+            index += 1
+            print(f'Opción {index} --> Receta: {receta.name}')
+
+        print(f'{index+1} --> Salir')
+
+        totalRecetas = len(recetas) + 1
+        opcion = int(input('\n Por favor seleccione una receta: '))
+        if int(opcion) == totalRecetas:
+            return ''
+        else:
+            return recetas[opcion-1]
         
-    opcion = int(input('\n Por favor seleccione una receta: '))
-    
-    return recetas[opcion-1]
 
 def VisualizarReceta(ruta,categoria,receta):
 
@@ -81,27 +89,79 @@ def LeerReceta(ruta):
     print(f'Categoria: "{categoria}" seleccionada')
 
     receta = ElegirReceta(ruta,categoria)
-    print(f'Receta: "{receta}" seleccionada')
-    VisualizarReceta(ruta,categoria,receta)
+
+    if receta != '':
+        print(f'Receta: "{receta}" seleccionada')
+        VisualizarReceta(ruta,categoria,receta)
 
     tecla = input('Presione cualquiera tecla para continuar...')
 
 
 
-def EscribirReceta():
-    print('Menu Escribir Receta')
+def EscribirReceta(ruta):
+
+    os.system('clear')
+
+    categoria = elegirCategoria(ruta)
+    print(f'Categoria: "{categoria}" seleccionada')
+
+    insertarReceta(ruta,categoria)
 
     tecla = input('Presione cualquiera tecla para continuar...')
     
 
 
-# def CrearCategoria():
+def insertarReceta(ruta,categoria):
+    
+    nombreReceta = input('Ingrese el nombre de la nueva receta: ')
+
+    contenidoReceta = input(f'Ingrese el contenido de la receta "{nombreReceta}" --> ')
+
+    crearArchivoReceta(ruta,categoria,nombreReceta,contenidoReceta)
+
+def crearArchivoReceta(ruta,categoria,nombreReceta,contenidoReceta):
+
+    nuevaRuta = Path(ruta,categoria,nombreReceta + '.txt')
+    archivoReceta = open(nuevaRuta,mode='w')
+    archivoReceta.write(contenidoReceta)
+    archivoReceta.close()
 
 
-# def EliminarReceta():
+
+def CrearCategoria(ruta):
+
+    nombreCategoria = input('Inserte el nombre de la categoria que quiere crear: ')
+    nuevaCategoria = Path(ruta,nombreCategoria)
+    os.mkdir(nuevaCategoria)
+
+    print(f'Nueva categoria creada {nuevaCategoria.absolute()}')
+    tecla = input('Presione cualquiera tecla para continuar...')
+    
 
 
-# def EliminarCategoria():
+def EliminarReceta(ruta):
+    categoria = elegirCategoria(ruta)
+
+    receta = ElegirReceta(ruta,categoria)
+    print(f'Receta: "{receta}" seleccionada')
+    
+    BorrarArchivoReceta(ruta,categoria,receta)
+
+    tecla = input('Presione cualquiera tecla para continuar...')
+
+def BorrarArchivoReceta(ruta,categoria,receta):
+
+    rutaArchivo = Path(ruta,categoria,receta)
+    os.remove(rutaArchivo)
+
+
+def EliminarCategoria(ruta):
+    categoria = elegirCategoria(ruta)
+
+    rutaCategoria = Path(ruta,categoria)
+    os.rmdir(rutaCategoria)
+
+    tecla = input('Presione cualquiera tecla para continuar...')
 
 
 # def Salir():
@@ -114,9 +174,10 @@ def ElegirOpcion(ruta,menu):
 
     while opcionUsuario != salir:
 
-        print('*'*20)
+        os.system('clear')
+        print('*'*10)
         print('Menu Recetas')
-        print('*'*20)
+        print('*'*10)
 
         for opcion in menu:
             print(f'Opción {opcion}')
@@ -129,18 +190,20 @@ def ElegirOpcion(ruta,menu):
                 LeerReceta(ruta) # 1
                 os.system('clear')
             case '2':
-                EscribirReceta()
+                EscribirReceta(ruta)
                 os.system('clear')
+            case '3':
+                CrearCategoria(ruta)
+            case '4':
+                EliminarReceta(ruta)
+            case '5':
+                EliminarCategoria(ruta)
+            case '6':
+                opcionUsuario = 's'
 
-    
-    # EscribirReceta() # 2
-    # CrearCategoria() # 3  
-    # EliminarReceta() # 4 
-    # EliminarCategoria() # 5 
-    # Salir() # 6 
 
 
-
+#Comienzo de Programa
 SaludarUsuario()
 ruta = TratamiendoCarpetaRecetario()
 
